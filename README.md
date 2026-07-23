@@ -86,6 +86,8 @@ python main.py
 ### GUI Overview
 
 Top part (for instant preview and setting initial parameters)
+|||
+|-|-|
 | Contrast (%) | Stimulus contrast (0–100%) |
 | Spatial frequency (c/d) | Grating finess in cycles per degree of visual angle |
 | Speed (d/s) | Grating drift speed in degrees per second |
