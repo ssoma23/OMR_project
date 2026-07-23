@@ -21,6 +21,7 @@ This system presents square-wave grating stimuli on a secondary monitor and allo
 | Laptop computer or desktop computer + monitor | For stimulus control            |
 | 4 monitors                                    | For stimulus presentation       |
 | HDMI splitter (4 out)                         | For duplicating stimulus window |
+
 Worked with Windows 10/11. May work with Linux too.
 
 3D-printable platform files are provided in [`3D model/`](3D%20model/).
@@ -141,6 +142,7 @@ CSV files are saved to `SAVE_DIRECTORY` with filenames: `<AnimalID>_<YEAR><MONTH
 | `sf`   | Spatial frequency (c/d)          |
 | `spd`  | Speed (d/s)                      |
 | `hm`   | Response: `h` (Hit) / `m` (Miss) |
+
 Lines correspond to trials.
 
 ## Citation
