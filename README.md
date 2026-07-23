@@ -1,6 +1,6 @@
 # OMR Visual Stimulation System
 
-A PyQt6-based GUI application for measuring **Optomotor Response (OMR)** in animals using drifting grating stimuli and the staircase method.
+GUI application for measuring **Optomotor Response (OMR)** in animals using drifting grating stimuli and the staircase method.
 
 ## Overview
 
@@ -16,11 +16,12 @@ This system presents square-wave grating stimuli on a secondary monitor and allo
 
 ## Hardware Requirements
 
-| Component | Specification |
-|-----------|--------------|
-| Display monitor (x4) | 1920×1080, 60 Hz (for stimulus) |
-| Monitor–mouse distance | ~24 cm (adjustable in `config.py`) |
-| OS | Windows 10/11 |
+| Component                                     | Specification                   |
+| --------------------------------------------- | ------------------------------- |
+| Laptop computer or desktop computer + monitor | For stimulus control            |
+| 4 monitors                                    | For stimulus presentation       |
+| HDMI splitter (4 out)                         | For duplicating stimulus window |
+Worked with Windows 10/11. May work with Linux too.
 
 3D-printable platform files are provided in [`3D model/`](3D%20model/).
 
@@ -47,15 +48,25 @@ pip install -r requirements.txt
 
 ## Configuration
 
-Edit [`OMR/config.py`](OMR/config.py) before first use:
-
-```python
-MONITOR_NAME         = 'YourMonitorName'   # PsychoPy monitor profile name
-MONITOR_SIZE         = (45, 26.3)          # Physical screen size (cm)
-MONITOR_DISTANCE     = 24                  # Viewing distance (cm)
-MONITOR_REFRESH_RATE = 60                  # Hz
-SAVE_DIRECTORY       = r'C:\path\to\data'  # Output directory for CSV files
+### Connection
+```bash
+Computer
+└── HDMI splitter
+    ├── Monitor 1
+    ├── Monitor 2
+    ├── Monitor 3
+    └── Monitor 4
 ```
+Set multiple display mode to "extend"
+
+Edit [`OMR/config.py`](OMR/config.py) before first use:
+```python
+MONITOR_RESOLUTION   = (1920, 1080) # pix
+MONITOR_SIZE         = (45, 26.3)   # Physical size (cm)
+MONITOR_DISTANCE     = 24           # Distance (cm) from monitor to animal
+MONITOR_REFRESH_RATE = 60           # Hz
+```
+> **Note:** Monitors for stimulus presentation
 
 ### Gamma Correction
 
@@ -73,6 +84,9 @@ Check minimum brightness (m), maximum brightness (M), and gamma value (gamma), a
 python -c "import gamma_correction; gamma_correction.evaluate(m, M, gamma)"
 ```
 If the evaluation result is OK, you can update "MONITOR_GAMMA" in config.py.
+'''python
+MONITOR_GAMMA        = None
+'''
 > **Note:** If you encounter "OSError: The hardware look-up table function (GetDeviceGammaRamp) failed", you have to set the gamma value through the GPU setting, instead of config.py.
 
 ## Usage
@@ -81,35 +95,38 @@ If the evaluation result is OK, you can update "MONITOR_GAMMA" in config.py.
 cd OMR
 python main.py
 ```
-> **Tip:** If you want to use sinusoidal grating instead of square one, change "sqr" to "sin" in "stm = visual.GratingStim(win, size = 120, texRes = 512, tex = 'sqr')" (L87)
+> **Tip:** If you want to use sinusoidal grating instead of square one, change "sqr" to "sin" in "stm = visual.GratingStim(win, size = 120, texRes = 512, tex = 'sqr')" (L44)
+'''python
+stm = visual.GratingStim(win, size = 120, texRes = 512, tex = 'sin')
+'''
 
 ### GUI Overview
 
 Top part (for instant preview and setting initial parameters)
-| Control | Description |
-|-|-|
-| Contrast (%) | Stimulus contrast (0–100%) |
+| Control                 | Description                                         |
+| ----------------------- | --------------------------------------------------- |
+| Contrast (%)            | Stimulus contrast (0–100%)                          |
 | Spatial frequency (c/d) | Grating finess in cycles per degree of visual angle |
-| Speed (d/s) | Grating drift speed in degrees per second |
-| Show/Hide | Toggle stimulus visibility |
-| Apply | Apply current parameter values to stimulus |
+| Speed (d/s)             | Grating drift speed in degrees per second           |
+| Show/Hide               | Toggle stimulus visibility                          |
+| Apply                   | Apply current parameter values to stimulus          |
 
 Bottom part (for staircase method)
-| Control | Description |
-|-|-|
-| Contrast step (%) | Increment/decrement step of contrast. Select one of contrast step, spatial frequency step, and speed step. |
+| Control                      | Description                                                                                                         |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| Contrast step (%)            | Increment/decrement step of contrast. Select one of contrast step, spatial frequency step, and speed step.          |
 | Spatial frequency step (c/d) | Increment/decrement step of spatial frequency. Select one of contrast step, spatial frequency step, and speed step. |
-| Speed step (%) | Increment/decrement step of speed. Select one of contrast step, spatial frequency step, and speed step. |
-| Timer (sec) | Countdown before auto-Miss |
-| Termination (#Miss) | Number of misses to end a session |
-| Save directry | Path for CSV auto-saving |
-| Animal ID | Prefix for output CSV filename |
-| Start | Start session |
-| Stop | Stop session |
+| Speed step (%)               | Increment/decrement step of speed. Select one of contrast step, spatial frequency step, and speed step.             |
+| Timer (sec)                  | Countdown before auto-Miss                                                                                          |
+| Termination (#Miss)          | Number of misses to end a staircase session                                                                         |
+| Save directry                | Path for CSV auto-saving                                                                                            |
+| Animal ID                    | Prefix for output CSV filename                                                                                      |
+| Start                        | Start a staircase method session                                                                                    |
+| Stop                         | Stop a staircase method session                                                                                     |
 
 ### Staircase Response
 
-Click inside the **Staircase method** panel (right part):
+Click inside the **Staircase method** panel (right part of GUI):
 
 - **Left click** → Hit (animal responded)
 - **Right click** → Miss (no response)
@@ -118,12 +135,12 @@ Click inside the **Staircase method** panel (right part):
 
 CSV files are saved to `SAVE_DIRECTORY` with filenames: `<AnimalID>_<YEAR><MONTH><DAY>T<HOUR><MINUTE><SECOND>.csv`
 
-| Column | Description |
-|--------|-------------|
-| `ct` | Contrast (%) |
-| `sf` | Spatial frequency (c/d) |
-| `spd` | Speed (d/s) |
-| `hm` | Response: `h` (Hit) / `m` (Miss) |
+| Column | Description                      |
+| ------ | -------------------------------- |
+| `ct`   | Contrast (%)                     |
+| `sf`   | Spatial frequency (c/d)          |
+| `spd`  | Speed (d/s)                      |
+| `hm`   | Response: `h` (Hit) / `m` (Miss) |
 Lines correspond to trials.
 
 ## Citation
