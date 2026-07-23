@@ -86,6 +86,7 @@ python main.py
 ### GUI Overview
 
 Top part (for instant preview and setting initial parameters)
+| Control | Description |
 |-|-|
 | Contrast (%) | Stimulus contrast (0–100%) |
 | Spatial frequency (c/d) | Grating finess in cycles per degree of visual angle |
@@ -94,10 +95,11 @@ Top part (for instant preview and setting initial parameters)
 | Apply | Apply current parameter values to stimulus |
 
 Bottom part (for staircase method)
-| Contrast step (%) | Increment/decrement step of contrast |
-| Spatial frequency step (c/d) | Increment/decrement step of spatial frequency |
-| Speed step (%) | Increment/decrement step of speed |
-Select one of them.
+| Control | Description |
+|-|-|
+| Contrast step (%) | Increment/decrement step of contrast. Select one of contrast step, spatial frequency step, and speed step. |
+| Spatial frequency step (c/d) | Increment/decrement step of spatial frequency. Select one of contrast step, spatial frequency step, and speed step. |
+| Speed step (%) | Increment/decrement step of speed. Select one of contrast step, spatial frequency step, and speed step. |
 | Timer (sec) | Countdown before auto-Miss |
 | Termination (#Miss) | Number of misses to end a session |
 | Save directry | Path for CSV auto-saving |
