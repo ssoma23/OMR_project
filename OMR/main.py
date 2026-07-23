@@ -1,18 +1,8 @@
-# Grating stimulation for OKR recording (multiple monitors)
-
-"""
-#Screen/stimulus tearing: only on Linux? -> Not observed on Win10.
-#Screen refresh timing save
-#Data save
-#Trigger detector
-"""
+# Grating stimulation for OMR recording (multiple monitors)
 
 import os
 import sys
 import time   as tm
-#import numpy  as np
-#import pickle as pc
-#from psychopy import monitors, visual, clock
 from psychopy import visual, monitors
 from config import *
 
@@ -21,39 +11,6 @@ import PyQt6.QtCore    as qc
 import PyQt6.QtGui     as qg
 
 import multiprocessing as mp
-
-def stimulation():
-    mon = monitors.Monitor(MONITOR_NAME)
-    mon.setDistance(MONITOR_DISTANCE)
-    mon.setGamma(MONITOR_GAMMA)
-    mon.setSizePix(MONITOR_RESOLUTION)
-    mon.setWidth(MONITOR_SIZE[0])
-    
-    win = visual.Window(size         = MONITOR_RESOLUTION,
-                        monitor      = mon,
-                        units        = 'deg',
-                        screen       = MONITOR_ID,
-                        allowGUI     = False,
-                        waitBlanking = False,
-                        fullscr      = False,
-                        allowStencil = True)
-    
-    #ct = ...
-    #sf = ...
-    #tf = ...
-    
-    stm = visual.GratingStim(win,
-                             size = 100,
-                             contrast = 1,
-                             sf = 1)
-    tf = 1
-    
-    # any break acceptance
-    # interruption/update acceptance
-    while True:
-        stm.phase += tf/MONITOR_REFRESH_RATE
-        stm.draw()
-        win.flip()
 
 class StimulationProcess():
     def __init__(self, vis = False, ct = 1, sf = 1, tf = 1):
@@ -110,9 +67,8 @@ class MainWindow(qw.QMainWindow):
     def __init__(self):
         super().__init__()
         
-        self.setWindowTitle('OKR Visual Stimulation')
+        self.setWindowTitle('OMR Visual Stimulation')
         self.setWindowIcon(qg.QIcon('icon.png'))
-        #self.setWindowFlag(qc.Qt.WindowType.WindowStaysOnTopHint, True)
         
         text_ct = qw.QLabel('Contrast (%)')
         self.ct = qw.QSpinBox()
@@ -123,14 +79,6 @@ class MainWindow(qw.QMainWindow):
         self.sf = qw.QDoubleSpinBox()
         self.sf.setMaximum(10)
         self.sf.setValue(STIMULATION_SPATIAL_FREQUENCY)
-        
-        """
-        text_tf = qw.QLabel('Temporal frequency (c/s)')
-        self.tf = qw.QDoubleSpinBox()
-        self.tf.setMaximum(10)
-        self.tf.setMinimum(-10)
-        self.tf.setValue(1)
-        """
         
         text_spd = qw.QLabel('Speed (d/s)')
         self.spd = qw.QDoubleSpinBox()
@@ -185,7 +133,6 @@ class MainWindow(qw.QMainWindow):
         self.button_stop  = qw.QPushButton('Stop')
         self.button_stop.setEnabled(False)
         
-        #text_answer = qw.QLabel('Staircase method\nClick here\nHit --- left\nMiss --- right\nFlip --- middle')
         text_answer = qw.QLabel('Staircase method\nClick here\nHit --- left\nMiss --- right')
         
         layout_values = qw.QGridLayout()
@@ -193,8 +140,6 @@ class MainWindow(qw.QMainWindow):
         layout_values.addWidget(self.ct, 1, 2)
         layout_values.addWidget(text_sf, 2, 1)
         layout_values.addWidget(self.sf, 2, 2)
-        #layout_values.addWidget(text_tf, 3, 1)
-        #layout_values.addWidget(self.tf, 3, 2)
         layout_values.addWidget(text_spd, 3, 1)
         layout_values.addWidget(self.spd, 3, 2)
         group_values = qw.QGroupBox()
@@ -308,11 +253,9 @@ class MainWindow(qw.QMainWindow):
                 self.sf.setValue(self.sf.value() + self.sf_step.value())
             elif self.state_spd_step.isChecked():
                 self.spd.setValue(abs(self.spd.value()) + self.spd_step.value())
-            #self.spd.setValue(-self.spd.value())
         else:
             self.flag_flip = True
             self.spd.setValue(-self.spd.value())
-        #self.spd.setValue(-self.spd.value())
         self.stimulation_process.update(ct = self.ct.value()/100, sf = self.sf.value(), tf = self.sf.value()*self.spd.value())
         self.timer.setValue(self.timer_value)
         self.countdown.start()
@@ -323,10 +266,6 @@ class MainWindow(qw.QMainWindow):
             self.flag_flip = False
             self.ct.setValue(self.ct.value() + self.ct_step.value())
             self.spd.setValue(abs(self.spd.value()))
-            #self.stimulation_process.update(sf = self.sf.value(), tf = self.sf.value()*self.spd.value())
-            #self.incrementMiss()
-            #self.timer.setValue(self.timer_value)
-            #self.countdown.start()
         elif self.state_sf_step.isChecked() and not self.sf.value() == 0:
             self.file.write('%f,%f,%f,%s\n'%(self.ct.value(), self.sf.value(), self.spd.value(), 'm'))
             self.flag_flip = False
@@ -359,9 +298,6 @@ class MainWindow(qw.QMainWindow):
         self.file = open(os.path.join(self.save.text(), self.id.text() + tm.strftime('_%Y%m%dT%H%M%S.csv')), 'w')
         self.file.write('ct,sf,spd,hm\n')
         self.flag_visible = True
-        #self.ct.setValue(STIMULATION_CONTRAST)
-        #self.sf.setValue(STIMULATION_SPATIAL_FREQUENCY)
-        #self.spd.setValue(STIMULATION_SPEED)
         self.ct_value  = self.ct.value()
         self.sf_value  = self.sf.value()
         self.spd_value = self.spd.value()

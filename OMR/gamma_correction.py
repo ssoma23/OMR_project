@@ -1,5 +1,5 @@
 MONITOR_SIZE = 1920, 1080
-MONITOR_ID   = 0
+MONITOR_ID   = 1
 N_POINT      = 5
 
 import numpy as np
