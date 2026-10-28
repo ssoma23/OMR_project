@@ -151,7 +151,7 @@ If you use this software in your research, please cite:
 
 Suematsu N, Ikeda T, Aoki T, Asayama M, Horii T, Hoshino A, Tanaka H, Soma S (2026).
 An open-source platform for measuring optomotor responses in mice.
-*Journal of Physiological Sciences*, 100113.
+*Journal of Physiological Sciences*, 76(3), 100113.
 https://doi.org/10.1016/j.jphyss.2026.100113
 
 ```bibtex
@@ -159,7 +159,10 @@ https://doi.org/10.1016/j.jphyss.2026.100113
   title   = {An open-source platform for measuring optomotor responses in mice},
   author  = {Suematsu, Naofumi and Ikeda, Toshihide and Aoki, Takanori and Asayama, Moe and Horii, Takuro and Hoshino, Atsushi and Tanaka, Hiroshi and Soma, Shogo},
   journal = {Journal of Physiological Sciences},
+  volume  = {76},
+  number  = {3},
   pages   = {100113},
+  month   = {nov},
   year    = {2026},
   doi     = {10.1016/j.jphyss.2026.100113},
   url     = {https://doi.org/10.1016/j.jphyss.2026.100113}
